@@ -1,11 +1,11 @@
-package com.example.pedidos
+package com.example.foodorderingsystem
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class PedidosApplication
+class FoodOrderingSystemApplication
 
 fun main(args: Array<String>) {
-	runApplication<PedidosApplication>(*args)
+	runApplication<FoodOrderingSystemApplication>(*args)
 }
