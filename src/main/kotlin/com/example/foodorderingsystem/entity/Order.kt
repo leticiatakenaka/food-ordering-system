@@ -14,7 +14,7 @@ data class Order(
     val restaurant: String,
 
     @Enumerated(EnumType.STRING)
-    val status: OrderStatus = OrderStatus.PENDING,
+    var status: OrderStatus = OrderStatus.PENDING,
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: MutableList<OrderItem> = mutableListOf()

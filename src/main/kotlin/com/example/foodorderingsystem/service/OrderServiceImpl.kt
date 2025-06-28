@@ -1,6 +1,7 @@
 package com.example.foodorderingsystem.service
 
 import com.example.foodorderingsystem.dto.CreateOrderRequest
+import com.example.foodorderingsystem.dto.OrderResponse
 import com.example.foodorderingsystem.entity.Order
 import com.example.foodorderingsystem.entity.OrderItem
 import com.example.foodorderingsystem.repository.OrderRepository
@@ -34,15 +35,15 @@ class OrderServiceImpl(
 
         val saved = orderRepository.save(order)
 
-        val payload = mapOf(
-            "orderId" to saved.id,
-            "customerName" to saved.customerName,
-            "restaurant" to saved.restaurant,
-            "items" to saved.items.map { it.itemName },
-            "status" to saved.status
+        val message = OrderResponse(
+            orderId = saved.id,
+            customerName = saved.customerName,
+            restaurant = saved.restaurant,
+            items = saved.items.map { it.itemName },
+            status = saved.status
         )
 
-        rabbitTemplate.convertAndSend("orders.exchange", "orders.created", payload)
+        rabbitTemplate.convertAndSend("orders.exchange", "orders.created", message)
 
         return saved
     }
