@@ -1,1 +1,1 @@
-rootProject.name = "pedidos"
+rootProject.name = "FoodOrderingSystem"
