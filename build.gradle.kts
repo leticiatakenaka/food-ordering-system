@@ -27,6 +27,7 @@ dependencies {
 	implementation("org.jboss.logging:jboss-logging:3.5.0.Final")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("org.postgresql:postgresql:42.6.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

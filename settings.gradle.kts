@@ -1,1 +1,1 @@
-rootProject.name = "FoodOrderingSystem"
+    rootProject.name = "FoodOrderingSystem"

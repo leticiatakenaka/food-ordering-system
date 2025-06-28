@@ -21,9 +21,10 @@ class OrderController(
         val order = orderService.createOrder(request)
         val response = OrderResponse(
             orderId = order.id,
-            status = order.status.name,
+            status = order.status,
             customerName = order.customerName,
-            restaurant = order.restaurant
+            restaurant = order.restaurant,
+            items = order.items.map { it.itemName },
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
