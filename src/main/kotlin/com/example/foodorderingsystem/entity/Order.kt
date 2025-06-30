@@ -2,7 +2,6 @@ package com.example.foodorderingsystem.entity
 
 import com.example.foodorderingsystem.enums.OrderStatus
 import com.example.foodorderingsystem.enums.PaymentStatus
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import java.util.Date
 import java.util.UUID
