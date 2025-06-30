@@ -1,43 +1,49 @@
 package com.example.foodorderingsystem.service
 
-import com.example.foodorderingsystem.dto.OrderResponse
+import com.example.foodorderingsystem.enums.PaymentStatus
+import com.example.foodorderingsystem.mapper.OrderMapper
 import com.example.foodorderingsystem.repository.OrderRepository
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
+import kotlin.random.Random
+import java.util.UUID
 
 @Component
-class OrderConsumer(
+class OrderConsumerService(
     private val orderRepository: OrderRepository,
-    private val messagingTemplate: SimpMessagingTemplate
+    private val messagingTemplate: SimpMessagingTemplate,
+    private val orderMapper: OrderMapper
 ) {
     private val objectMapper = jacksonObjectMapper()
 
-    @RabbitListener(queues = ["orders.queue"])
-    fun receive(orderMessage: OrderResponse) {
-        //Thread.sleep(5500);
+     @RabbitListener(queues = ["orders.queue"])
+     fun processPayment(orderGuid: UUID) {
+         println("📩 Recebido da fila: $orderGuid")
 
-        println("📩 Recebido da fila: $orderMessage")
+         val orderOptional = orderRepository.findById(orderGuid)
 
-        val orderOptional = orderRepository.findById(orderMessage.orderId)
+         if (orderOptional.isPresent) {
+             val pedido = orderOptional.get()
 
-        if (orderOptional.isPresent) {
-            val pedido = orderOptional.get()
-            pedido.status = OrderStatus.PROCESSING
-            orderRepository.save(pedido)
-            println("✅ Pedido ${pedido.id} em preparação.")
+             Thread.sleep(3500)
 
-            val statusUpdate = mapOf(
-                "id" to pedido.id,
-                "status" to pedido.status,
-                "updatedAt" to LocalDateTime.now()
-            )
+             // Simulando recusa de 30% dos pagamentos
+             val recusado = Random.nextDouble() < 0.3
+             if (recusado) {
+                 pedido.paymentStatus = PaymentStatus.REFUSED
+                 println("❌ Pagamento recusado para o pedido ${pedido.guid}.")
+             } else {
+                 pedido.paymentStatus = PaymentStatus.PAID
+                 println("✅ Pagamento aprovado para o pedido ${pedido.guid}.")
+             }
 
-            messagingTemplate.convertAndSend("/topic/orders/${pedido.id}/status", statusUpdate)
-        } else {
-            println("⚠️ Pedido com ID ${orderMessage.orderId} não encontrado.")
-        }
-    }
+             val orderSaved = orderRepository.save(pedido)
+
+             messagingTemplate.convertAndSend("/topic/orders/${pedido.guid}/status", orderSaved)
+         } else {
+             println("⚠️ Pedido com ID ${orderGuid} não encontrado.")
+         }
+     }
 }
