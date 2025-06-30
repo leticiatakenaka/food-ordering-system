@@ -13,6 +13,7 @@ class OrderAppService(
     private val restaurantRepository: RestaurantRepository,
     private val paymentTypeRepository: PaymentTypeRepository,
     private val itemRepository: ItemRepository,
+    private val orderRepository: OrderRepository,
     private val orderServiceImpl: OrderServiceImpl,
     private val orderMapper: OrderMapper
 ) {
@@ -49,5 +50,11 @@ class OrderAppService(
         val savedOrder = orderServiceImpl.createOrder(order);
 
         return orderMapper.toDTO(savedOrder);
+    }
+
+    fun getOrders(): List<OrderDTO> {
+        val orders = orderRepository.findAll()
+
+        return orderMapper.toListDTO(orders)
     }
 }
