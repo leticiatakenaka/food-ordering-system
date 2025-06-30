@@ -48,10 +48,20 @@ class OrderMapper {
     fun toDTO(order: Order): OrderDTO {
         return OrderDTO(
             guid = order.guid,
-            customerName = order.customer.user?.name ?: throw IllegalArgumentException(),
-            customerGuid = order.customer.guid,
-            restaurantGuid = order.restaurant.guid,
-            restaurantName = order.restaurant.name,
+            customer = CustomerDTO(order.guid, order.customer.user?.name ?: throw IllegalArgumentException()),
+            restaurant = RestaurantDTO(
+                order.restaurant.guid ?: throw IllegalArgumentException(),
+                order.restaurant.name,
+                order.restaurant.cnpj,
+                order.restaurant.createdAt
+                    .toInstant()
+                    ?.atZone(ZoneId.systemDefault())
+                    ?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                order.restaurant.updatedAt
+                    .toInstant()
+                    ?.atZone(ZoneId.systemDefault())
+                    ?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            ),
             paymentType = order.paymentType.guid,
             status = order.status.name,
             paymentStatus = order.paymentStatus.name,
