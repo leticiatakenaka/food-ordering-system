@@ -2,6 +2,7 @@ package com.example.foodorderingsystem.controller
 
 import com.example.foodorderingsystem.dto.CreateOrderRequest
 import com.example.foodorderingsystem.dto.OrderDTO
+import com.example.foodorderingsystem.dto.RestaurantDTO
 import com.example.foodorderingsystem.service.OrderAppService
 
 import jakarta.validation.Valid
@@ -20,5 +21,12 @@ class OrderController(
     ): ResponseEntity<OrderDTO> {
         val order = orderAppService.createOrder(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(order)
+    }
+
+    @GetMapping()
+    fun getOrders(
+    ): ResponseEntity<List<OrderDTO>> {
+        val orders = orderAppService.getOrders()
+        return ResponseEntity.status(HttpStatus.OK).body(orders)
     }
 }

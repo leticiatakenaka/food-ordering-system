@@ -41,6 +41,9 @@ class OrderMapper {
         return order
     }
 
+    fun toListDTO(orders: List<Order>): List<OrderDTO> {
+        return orders.map { toDTO(it) }
+    }
 
     fun toDTO(order: Order): OrderDTO {
         return OrderDTO(

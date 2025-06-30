@@ -15,10 +15,6 @@ class SecurityConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .csrf { it.disable() }
-            .authorizeHttpRequests {
-                it.requestMatchers("/orders/**").authenticated()
-                    .anyRequest().permitAll()
-            }
             .httpBasic(Customizer.withDefaults())
             .build()
     }
