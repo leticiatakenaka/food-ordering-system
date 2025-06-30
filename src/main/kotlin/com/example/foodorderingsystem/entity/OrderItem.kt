@@ -1,4 +1,5 @@
 package com.example.foodorderingsystem.entity
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import java.util.UUID
 
@@ -11,6 +12,7 @@ data class OrderItem(
 
     @ManyToOne
     @JoinColumn(name = "order_guid")
+    @JsonBackReference
     val order: Order,
 
     @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = false)

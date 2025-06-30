@@ -1,5 +1,6 @@
 package com.example.foodorderingsystem.dto
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
@@ -22,6 +23,7 @@ data class OrderDTO(
 
     val paymentStatus: String,
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val createdAt: String? = null,
 
     val items: List<OrderItemDTO>

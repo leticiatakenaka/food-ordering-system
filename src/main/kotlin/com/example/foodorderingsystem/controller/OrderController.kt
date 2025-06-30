@@ -3,7 +3,6 @@ package com.example.foodorderingsystem.controller
 import com.example.foodorderingsystem.dto.CreateOrderRequest
 import com.example.foodorderingsystem.dto.OrderDTO
 import com.example.foodorderingsystem.service.OrderAppService
-import com.example.foodorderingsystem.service.OrderConsumerService
 
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
