@@ -1,9 +1,7 @@
 package com.example.foodorderingsystem.service
 
 import com.example.foodorderingsystem.enums.PaymentStatus
-import com.example.foodorderingsystem.mapper.OrderMapper
 import com.example.foodorderingsystem.repository.OrderRepository
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
@@ -14,10 +12,7 @@ import java.util.UUID
 class OrderConsumerService(
     private val orderRepository: OrderRepository,
     private val messagingTemplate: SimpMessagingTemplate,
-    private val orderMapper: OrderMapper
 ) {
-    private val objectMapper = jacksonObjectMapper()
-
      @RabbitListener(queues = ["orders.queue"])
      fun processPayment(orderGuid: UUID) {
          println("📩 Recebido da fila: $orderGuid")
