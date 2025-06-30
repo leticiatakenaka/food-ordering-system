@@ -5,19 +5,15 @@ import java.util.UUID
 data class OrderDTO(
     val guid: UUID? = null,
 
-    val customerGuid: UUID? = null,
+    val customer: CustomerDTO,
 
-    val restaurantGuid: UUID? = null,
+    val restaurant: RestaurantDTO,
 
     val paymentType: UUID,
 
-    val customerName: String,
-
-    val restaurantName: String,
+    val paymentStatus: String,
 
     val status: String,
-
-    val paymentStatus: String,
 
     val createdAt: String? = null,
 
