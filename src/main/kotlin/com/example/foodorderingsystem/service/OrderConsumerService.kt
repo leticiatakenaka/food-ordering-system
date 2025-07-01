@@ -1,5 +1,6 @@
 package com.example.foodorderingsystem.service
 
+import com.example.foodorderingsystem.dto.OrderStatusDTO
 import com.example.foodorderingsystem.enums.PaymentStatus
 import com.example.foodorderingsystem.repository.OrderRepository
 import org.springframework.amqp.rabbit.annotation.RabbitListener
@@ -36,7 +37,9 @@ class OrderConsumerService(
 
              val orderSaved = orderRepository.save(pedido)
 
-             messagingTemplate.convertAndSend("/topic/orders/${pedido.guid}/status", orderSaved)
+             val dto = OrderStatusDTO(orderSaved.guid?: throw IllegalArgumentException("GUID do pedidio é nulo"), orderSaved.paymentStatus.toString())
+
+             messagingTemplate.convertAndSend("/topic/orders/${pedido.guid}/payment-status", dto)
          } else {
              println("⚠️ Pedido com ID ${orderGuid} não encontrado.")
          }

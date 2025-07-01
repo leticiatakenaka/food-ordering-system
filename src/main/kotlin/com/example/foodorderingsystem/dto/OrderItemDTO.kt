@@ -1,6 +1,7 @@
 package com.example.foodorderingsystem.dto
 
 import jakarta.validation.constraints.NotBlank
+import java.math.BigDecimal
 import java.util.UUID
 
 data class OrderItemDTO(
@@ -8,5 +9,5 @@ data class OrderItemDTO(
     @field:NotBlank val itemGuid: UUID,
     @field:NotBlank val quantity: Int,
     val name: String,
-    val price: Double,
+    val price: BigDecimal,
 )

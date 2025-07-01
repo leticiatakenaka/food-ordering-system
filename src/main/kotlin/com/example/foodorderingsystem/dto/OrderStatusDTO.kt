@@ -1,4 +1,8 @@
 package com.example.foodorderingsystem.dto
 
-class OrderStatusDTO {
-}
+import java.util.UUID
+
+data class OrderStatusDTO(
+    val orderId: UUID,
+    val status: String
+)

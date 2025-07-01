@@ -1,4 +1,10 @@
 package com.example.foodorderingsystem.dto
 
-class ItemDto {
-}
+import java.math.BigDecimal
+import java.util.UUID
+
+data class ItemDTO(
+    val guid: UUID,
+    val name: String,
+    val price: BigDecimal
+)

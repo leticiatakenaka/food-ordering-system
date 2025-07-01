@@ -6,8 +6,10 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
+import java.math.BigDecimal
 import java.util.Date
 import java.util.UUID
 
@@ -20,7 +22,7 @@ data class Item (
 
     val name: String,
 
-    val price: Double,
+    val price: BigDecimal,
 
     @Column(name = "stock_quantity")
     val stockQuantity: Int,
@@ -31,11 +33,11 @@ data class Item (
     @Column(name = "updated_at")
     val updatedAt: Date,
 
-    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = false)
-    @JoinColumn(name = "restaurant_guid")
+    @ManyToOne
+    @JoinColumn(name = "restaurant_guid", nullable = false)
     val restaurant: Restaurant,
 
-    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = false)
-    @JoinColumn(name = "food_type_guid")
-    val foodType: FoodType,
+    @ManyToOne
+    @JoinColumn(name = "food_type_guid", nullable = false)
+    val foodType: FoodType
 )
