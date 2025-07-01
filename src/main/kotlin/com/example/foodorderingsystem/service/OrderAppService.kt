@@ -5,6 +5,7 @@ import com.example.foodorderingsystem.repository.*
 import com.example.foodorderingsystem.entity.*
 import com.example.foodorderingsystem.exception.NotFoundException
 import com.example.foodorderingsystem.mapper.OrderMapper
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.*
 
 @Service
@@ -19,38 +20,32 @@ class OrderAppService(
 ) {
 
     fun createOrder(request: CreateOrderRequest): OrderDTO {
-        val customerGuid = request.customerGuid
-            ?: throw IllegalArgumentException("GUID do cliente não pode ser nulo")
+        val customerGuid = requireNotNull(request.customerGuid) { "GUID do cliente não pode ser nulo" }
+        val restaurantGuid = requireNotNull(request.restaurantGuid) { "GUID do restaurante não pode ser nulo" }
+        val paymentTypeGuid = requireNotNull(request.paymentTypeGuid) { "Tipo do pagamento não pode ser nulo" }
 
-        val restaurantGuid = request.restaurantGuid
-            ?: throw IllegalArgumentException("GUID do cliente não pode ser nulo")
+        val customer = findEntityById(customerRepository, customerGuid, "Cliente não encontrado")
+        val restaurant = findEntityById(restaurantRepository, restaurantGuid, "Restaurante não encontrado")
+        val paymentType = findEntityById(paymentTypeRepository, paymentTypeGuid, "Tipo de pagamento não encontrado")
 
-        val paymentTypeGuid = request.paymentTypeGuid
-            ?: throw IllegalArgumentException("Tipo do pagamento não pode ser nulo")
-
-        val customer = customerRepository.findById(customerGuid)
-            .orElseThrow { NotFoundException("Cliente não encontrado") }
-
-        val restaurant = restaurantRepository.findById(restaurantGuid)
-            .orElseThrow { NotFoundException("Restaurante não encontrado") }
-
-        val payment = paymentTypeRepository.findById(paymentTypeGuid)
-            .orElseThrow { NotFoundException("Tipo de pagamento não encontrado") }
-
-        val order: Order = orderMapper.toEntity(
+        val order = orderMapper.toEntity(
             request = request,
             customer = customer,
             restaurant = restaurant,
-            paymentType = payment
+            paymentType = paymentType
         ) { itemGuid ->
-            itemRepository.findById(itemGuid)
-                .orElseThrow { NotFoundException("Item com ID $itemGuid não encontrado") }
+            findEntityById(itemRepository, itemGuid, "Item com ID $itemGuid não encontrado")
         }
 
-        val savedOrder = orderServiceImpl.createOrder(order);
-
-        return orderMapper.toDTO(savedOrder);
+        val savedOrder = orderServiceImpl.createOrder(order)
+        return orderMapper.toDTO(savedOrder)
     }
+
+    private fun <T, ID : Any> findEntityById(
+        repository: JpaRepository<T, ID>,
+        id: ID,
+        notFoundMessage: String
+    ): T = repository.findById(id).orElseThrow { NotFoundException(notFoundMessage) }
 
     fun getOrders(): List<OrderDTO> {
         val orders = orderRepository.findAll()

@@ -1,6 +1,7 @@
 package com.example.foodorderingsystem.entity
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.util.UUID
 
 @Entity
@@ -21,5 +22,5 @@ data class OrderItem(
 
     val quantity: Int = 1,
 
-    val price: Double = 0.0,
+    val price: BigDecimal,
 )

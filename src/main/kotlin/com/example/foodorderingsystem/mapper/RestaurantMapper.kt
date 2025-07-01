@@ -15,10 +15,10 @@ class RestaurantMapper {
             name = restaurant.name,
             cnpj = restaurant.cnpj,
             createdAt = restaurant.createdAt
-                ?.toInstant()
+                .toInstant()
                 ?.atZone(ZoneId.systemDefault())
                 ?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-            updatedAt = restaurant.updatedAt?.toInstant()
+            updatedAt = restaurant.updatedAt.toInstant()
                 ?.atZone(ZoneId.systemDefault())
                 ?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
         )
@@ -31,10 +31,10 @@ class RestaurantMapper {
                 name = restaurant.name,
                 cnpj = restaurant.cnpj,
                 createdAt = restaurant.createdAt
-                    ?.toInstant()
+                    .toInstant()
                     ?.atZone(ZoneId.systemDefault())
                     ?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                updatedAt = restaurant.updatedAt?.toInstant()
+                updatedAt = restaurant.updatedAt.toInstant()
                     ?.atZone(ZoneId.systemDefault())
                     ?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
             )
