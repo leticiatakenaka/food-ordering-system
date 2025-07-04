@@ -1,4 +1,3 @@
 package com.example.foodorderingsystem.exception
 
-class BadRequestException {
-}
+class BadRequestException(message: String) : RuntimeException(message)

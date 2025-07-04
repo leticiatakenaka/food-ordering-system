@@ -2,6 +2,7 @@ package com.example.foodorderingsystem.service
 
 import com.example.foodorderingsystem.dto.OrderStatusDTO
 import com.example.foodorderingsystem.enums.PaymentStatus
+import com.example.foodorderingsystem.enums.OrderStatus
 import com.example.foodorderingsystem.repository.OrderRepository
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -29,6 +30,7 @@ class OrderConsumerService(
              val recusado = Random.nextDouble() < 0.3
              if (recusado) {
                  pedido.paymentStatus = PaymentStatus.REFUSED
+                 pedido.status = OrderStatus.CANCELLED
                  println("❌ Pagamento recusado para o pedido ${pedido.guid}.")
              } else {
                  pedido.paymentStatus = PaymentStatus.PAID
@@ -37,7 +39,7 @@ class OrderConsumerService(
 
              val orderSaved = orderRepository.save(pedido)
 
-             val dto = OrderStatusDTO(orderSaved.guid?: throw IllegalArgumentException("GUID do pedidio é nulo"), orderSaved.paymentStatus.toString())
+             val dto = OrderStatusDTO(orderSaved.guid?: throw IllegalArgumentException("GUID do pedidio é nulo"), orderSaved.paymentStatus.toString(), orderSaved.status.toString())
 
              messagingTemplate.convertAndSend("/topic/orders/${pedido.guid}/payment-status", dto)
          } else {
