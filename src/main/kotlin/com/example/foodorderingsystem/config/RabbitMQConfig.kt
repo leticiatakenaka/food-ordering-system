@@ -16,11 +16,20 @@ class RabbitMQConfig {
     fun exchange(): TopicExchange = TopicExchange("orders.exchange")
 
     @Bean
-    fun queue(): Queue = Queue("orders.queue")
+    fun createdQueue(): Queue =
+        Queue("orders.created.queue", true)
 
     @Bean
-    fun binding(queue: Queue, exchange: TopicExchange): Binding =
-        BindingBuilder.bind(queue).to(exchange).with("orders.created")
+    fun confirmedQueue(): Queue =
+        Queue("orders.confirmed.queue", true)
+
+    @Bean
+    fun createdOrderBinding(createdQueue: Queue, ordersExchange: TopicExchange): Binding =
+        BindingBuilder.bind(createdQueue).to(ordersExchange).with("orders.created")
+
+    @Bean
+    fun confirmedOrderBinding(confirmedQueue: Queue, ordersExchange: TopicExchange): Binding =
+        BindingBuilder.bind(confirmedQueue).to(ordersExchange).with("orders.confirmed")
 
     @Bean
     fun messageConverter(): MessageConverter =
