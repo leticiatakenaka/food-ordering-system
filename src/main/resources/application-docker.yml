@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/FoodOrderingSystem
+    username: postgres
+    password: admin
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: myuser
+    password: secret
+server:
+  port: 8080

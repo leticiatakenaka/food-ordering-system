@@ -1,10 +1,10 @@
-package com.example.pedidos
+package com.example.foodorderingsystem
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class PedidosApplicationTests {
+class FoodOrderingSystemApplicationTests {
 
 	@Test
 	fun contextLoads() {
