@@ -7,6 +7,7 @@ import com.example.foodorderingsystem.exception.NotFoundException
 import com.example.foodorderingsystem.mapper.OrderMapper
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.*
+import java.util.UUID
 
 @Service
 class OrderAppService(
@@ -18,6 +19,12 @@ class OrderAppService(
     private val orderServiceImpl: OrderServiceImpl,
     private val orderMapper: OrderMapper
 ) {
+
+    fun confirmOrder(orderId: UUID) {
+        val order = findEntityById(orderRepository, orderId, "Pedido não encontrado")
+
+        orderServiceImpl.confirmOrder(order)
+    }
 
     fun createOrder(request: CreateOrderRequest): OrderDTO {
         val customerGuid = requireNotNull(request.customerGuid) { "GUID do cliente não pode ser nulo" }

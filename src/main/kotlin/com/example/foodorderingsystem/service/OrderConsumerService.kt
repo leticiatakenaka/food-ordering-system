@@ -3,6 +3,7 @@ package com.example.foodorderingsystem.service
 import com.example.foodorderingsystem.dto.OrderStatusDTO
 import com.example.foodorderingsystem.enums.PaymentStatus
 import com.example.foodorderingsystem.enums.OrderStatus
+import com.example.foodorderingsystem.exception.NotFoundException
 import com.example.foodorderingsystem.repository.OrderRepository
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -15,7 +16,7 @@ class OrderConsumerService(
     private val orderRepository: OrderRepository,
     private val messagingTemplate: SimpMessagingTemplate,
 ) {
-     @RabbitListener(queues = ["orders.queue"])
+     @RabbitListener(queues = ["orders.created.queue"])
      fun processPayment(orderGuid: UUID) {
          println("📩 Recebido da fila: $orderGuid")
 
@@ -43,7 +44,12 @@ class OrderConsumerService(
 
              messagingTemplate.convertAndSend("/topic/orders/${pedido.guid}/payment-status", dto)
          } else {
-             println("⚠️ Pedido com ID ${orderGuid} não encontrado.")
+             throw NotFoundException("Não foi encontrado pedido com esse ID: ${orderGuid}");
          }
+     }
+
+     @RabbitListener(queues = ["orders.confirmed.queue"])
+     fun notifyOrderConfirmed(orderGuid: UUID) {
+         messagingTemplate.convertAndSend("/topic/orders/${orderGuid}/confirmed-orders", "CONFIRMED")
      }
 }

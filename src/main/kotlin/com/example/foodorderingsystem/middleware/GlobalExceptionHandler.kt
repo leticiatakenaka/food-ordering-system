@@ -46,4 +46,10 @@ class GlobalExceptionHandler {
         val body = mapOf("error" to message)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
     }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleInvalidUUID(ex: IllegalArgumentException): ResponseEntity<Map<String, String>> {
+        val body = mapOf("error" to "Formato de UUID inválido")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
+    }
 }
