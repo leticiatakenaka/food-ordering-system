@@ -2,8 +2,32 @@
 
 Sistema de pedidos de comida utilizando **Spring Boot**, **PostgreSQL**, **RabbitMQ** e **Docker**.
 
----
+## 📖 Visão Geral
 
+O **FoodOrderingSystem** é uma API de pedidos de comida que simula o fluxo de um app de delivery real, com:
+
+- 📥 Criação de pedidos via API REST
+- 🐇 Processamento assíncrono com RabbitMQ
+- ⚙️ Estrutura escalável com Docker Compose
+
+![FoodOrdering](https://github.com/user-attachments/assets/d9d83315-100f-4fec-87eb-9a3d76f2f6ea)
+
+## 📬 Mensageria - Fluxo de Eventos
+
+- Quando um pedido é criado (`POST /orders`), ele é salvo no banco com status `PENDING` e publicado na fila `orders.queue`
+- O worker `PaymentConsumer` consome a fila e simula o pagamento
+- Ao receber a confirmação, o pedido é atualizado para `CONFIRMED`
+- Outro worker (`NotificationConsumer`) notifica o cliente sobre o status 
+  
+## 🛣️ Roadmap (em progresso)
+
+- [x] Criação de pedidos
+- [x] Processamento assíncrono com RabbitMQ
+- [ ] Log de status do pedido
+- [ ] Log de status do pagamento
+- [ ] Fila de acompanhamento de pedidos para a construção de um dashboard no front
+
+---
 ## 🐳 Rodando com Docker
 
 ### 📦 Requisitos
@@ -35,7 +59,6 @@ Isso irá subir os seguintes serviços:
 | 🧑‍💼 pgAdmin | [http://localhost:5050](http://localhost:5050)   | Email: `admin@admin.com`<br>Senha: `admin` |
 | 🐇 RabbitMQ | [http://localhost:15672](http://localhost:15672) | Usuário: `myuser`<br>Senha: `secret`       |
 
----
 
 ## 🧪 Banco de Dados
 
@@ -73,6 +96,22 @@ curl -X POST http://localhost:8080/orders   -H "Content-Type: application/json" 
 
 ```bash
 curl -X GET http://localhost:8080/orders
+```
+
+### Consultar restaurantes
+
+```bash
+curl -X GET http://localhost:8080/restaurants
+```
+
+### Listar perdidos por restaurante
+```bash
+curl -X GET http://localhost:8080/restaurants/{GUID_DO_RESTAURANTE}/items
+```
+Substitua `"GUID_DO_RESTAURANTE"` pelo `guid` real do pedido, por exemplo:
+
+```bash
+curl -X GET http://localhost:8080/restaurants/c8d47244-d2a7-4c49-a966-ce3b3fbf43fb/items
 ```
 
 ### Confirmar pedido
